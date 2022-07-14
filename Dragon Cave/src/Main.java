@@ -3,19 +3,15 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        char choice = '3';
-        do{
+        char choice;
+        
             System.out.println("You are in a land full of dragons. In front of you,");
             System.out.println("you see two caves. In one cave, the dragon is friendly");
             System.out.println("and will share his treasure with you.  The other dragon");
             System.out.println("is greedy and hungry and will eat you on sight.");
-            System.out.println("Which cave will you go into (1 or 2)");
-            try {
-                choice = input.next().charAt(0);
-            }catch(Exception e){
-                System.out.println(e.getMessage());
-            }
-        }while(choice != '1' && choice != '2');
+
+            choice = getChoice(input);
+            
         if(choice == '1'){
             System.out.println("You approach the cave...");
             System.out.println("It is dark and spooky...");
@@ -28,5 +24,17 @@ public class Main {
             System.out.println("The dragon showers you with gold!");
         }
 
+    }
+    public static char getChoice(Scanner input){
+        char choice = '0';
+        while(choice != '1' && choice != '2') {
+            System.out.println("Which cave will you go into (1 or 2)");
+            try {
+                choice = input.next().charAt(0);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return choice;
     }
 }
