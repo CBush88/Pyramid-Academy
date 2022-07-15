@@ -26,13 +26,19 @@ public class Main {
 
     }
     public static char getChoice(Scanner input){
-        char choice = '0';
-        while(choice != '1' && choice != '2') {
+        char choice;
+        while(true) {
             System.out.println("Which cave will you go into (1 or 2)");
             try {
                 choice = input.next().charAt(0);
+                if(choice == '1' || choice == '2'){
+                    break;
+                }else{
+                    throw new Exception("Invalid input");
+                }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                input.nextLine();
             }
         }
         return choice;
