@@ -29,12 +29,13 @@ public class Main {
                 }
 
                 System.out.print("Missed Letters: ");
-                for (var c : lettersGuessed) {
-                    if (!word.contains(c)) {
-                        System.out.print(c);
+                for (String s : lettersGuessed) {
+                    if (!word.contains(s)) {
+                        System.out.print(s);
                     }
                 }
                 System.out.println();
+                System.out.print("Secret word: ");
 
                 for (String s : word) {
                     if (lettersGuessed.contains(s)) {
@@ -50,6 +51,7 @@ public class Main {
                 while (true) {
                     try {
                         getGuess(input, lettersGuessed);
+                        //if the last letter guessed was not in the word, add a guess
                         if (!word.contains(lettersGuessed.get(lettersGuessed.size() - 1))) {
                             guesses++;
                         }
@@ -67,7 +69,7 @@ public class Main {
             }
 
             System.out.println(checkWin(word, lettersGuessed) ? "You win!" : "You lose!");
-            System.out.printf("The secret word was %s!\n", secret);
+            System.out.printf("The secret word was %s!%n", secret);
             System.out.println("Would you like to play again? (Yes / No)");
 
         }while(input.next().toLowerCase().charAt(0) != 'n');
@@ -108,11 +110,11 @@ public class Main {
 
         return hangman;
     }
-    public static void getGuess(Scanner input, ArrayList<String> guesses) throws Exception {
+    public static void getGuess(Scanner input, ArrayList<String> LettersGuessed) throws Exception {
         String guess = input.next().substring(0,1);
-        if(Character.isAlphabetic(guess.charAt(0)) && !guesses.contains(guess)){
-            guesses.add(guess);
-        }else if(guesses.contains(guess)){
+        if(Character.isAlphabetic(guess.charAt(0)) && !LettersGuessed.contains(guess)){
+            LettersGuessed.add(guess);
+        }else if(LettersGuessed.contains(guess)){
             throw new Exception("You already guessed that letter");
         }else{
             throw new Exception("Guess a letter");
