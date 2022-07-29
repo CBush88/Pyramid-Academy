@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HumanoidTest {
+    Human human;
 
     @BeforeEach
     void setUp() {
+        human = new Human();
     }
 
     @AfterEach
@@ -16,53 +18,45 @@ class HumanoidTest {
 
     @Test
     void getHp() {
-        Human human = new Human();
-        assertSame(20, human.getHp());
+        assertSame(20, human.getHp(), "Wrong value for HP");
     }
 
     @Test
     void setHp() {
-        Human human = new Human();
         human.setHp(19);
-        assertSame(19, human.getHp());
+        assertSame(19, human.getHp(), "HP set incorrectly");
     }
 
     @Test
     void getDamage() {
-        Human human = new Human();
-        assertSame(1, human.getDamage());
+        assertSame(1, human.getDamage(), "Wrong value for damage");
     }
 
     @Test
     void setDamage() {
-        Human human = new Human();
         human.setDamage(2);
-        assertSame(2, human.getDamage());
+        assertSame(2, human.getDamage(), "Damage set incorrectly");
     }
 
     @Test
     void getXPos() {
-        Human human = new Human();
-        assertTrue(human.getXPos() >= 0 && human.getXPos() <= 9);
+        assertTrue(human.getXPos() >= 0 && human.getXPos() <= 9, "X position out of bounds");
     }
 
     @Test
     void setXPos() {
-        Human human = new Human();
         human.setXPos(4);
-        assertSame(4, human.getXPos());
+        assertSame(4, human.getXPos(), "X position set incorrectly");
     }
 
     @Test
     void getYPos() {
-        Human human = new Human();
-        assertTrue(human.getYPos() >= 0 && human.getYPos() <= 9);
+        assertTrue(human.getYPos() >= 0 && human.getYPos() <= 9, "Y position out of bounds");
     }
 
     @Test
     void setYPos() {
-        Human human = new Human();
         human.setYPos(4);
-        assertSame(4, human.getYPos());
+        assertSame(4, human.getYPos(), "Y position set incorrectly");
     }
 }

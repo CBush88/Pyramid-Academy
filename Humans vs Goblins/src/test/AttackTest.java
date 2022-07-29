@@ -11,8 +11,8 @@ class AttackTest {
         int humanHp = human.getHp();
         int goblinHp = goblin.getHp();
 
-        String testString1 = human.attack(human, goblin);
-        String testString2 = goblin.attack(goblin, human);
+        String testString1 = human.attack(goblin);
+        String testString2 = goblin.attack(human);
 
         int humanHpAfter = human.getHp();
         int goblinHpAfter = goblin.getHp();
@@ -26,7 +26,7 @@ class AttackTest {
 
         goblin.setHp(1);
         goblinHp = 1;
-        String testString3 = human.attack(human, goblin);
+        String testString3 = human.attack(goblin);
         goblinHpAfter = goblin.getHp();
 
         assertTrue(String.format("%s attacks %s for %d damage.%n%s dies.", human.getClass().getSimpleName(),

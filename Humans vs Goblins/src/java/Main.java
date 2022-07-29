@@ -67,8 +67,17 @@ public class Main {
                 }catch(Exception e){
                     System.out.println(e.getMessage());
                 }
+                if(humanoids.size() == 1) {
+                    if (humanoids.get(0) instanceof Human) {
+                        System.out.println("You win!");
+                    }
+                }
+                if(human.getHp() <= 0){
+                    System.out.println("You lose!");
+                    System.out.println("Better luck next time");
+                    }
             }
-        }while(human.getHp() > 0);
+        }while(human.getHp() > 0 && humanoids.size() > 1);
     }
     public static char getInput(Scanner input, ArrayList<Character> allowableInputs) throws Exception {
         char keyPress = input.next().toLowerCase().charAt(0);

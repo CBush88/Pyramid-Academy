@@ -7,6 +7,6 @@ class GoblinTest {
     @Test
     void testToString() {
         Goblin goblin = new Goblin();
-        assertTrue(String.format("Enemy Goblin%nHP: %d", goblin.getHp()).equals(goblin.toString()));
+        assertTrue(String.format("Enemy Goblin%nHP: %d", goblin.getHp()).equals(goblin.toString()), "String incorrect");
     }
 }
