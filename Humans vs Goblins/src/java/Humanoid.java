@@ -1,4 +1,4 @@
-public abstract class Humanoid implements Move {
+public abstract class Humanoid implements Attack, Move {
     protected int hp;
     protected int damage;
 
@@ -38,5 +38,13 @@ public abstract class Humanoid implements Move {
 
     public void setYPos(int yPos) {
         this.yPos = yPos;
+    }
+
+    public String attack(Humanoid defender){
+        return attack(this, defender);
+    }
+
+    public void move(char direction) {
+        move(this, direction);
     }
 }

@@ -1,4 +1,4 @@
-public class Human extends Humanoid implements Attack, Move {
+public class Human extends Humanoid implements Move {
     protected int hp = 20;
     protected int damage = 1;
     public Human(){
@@ -9,5 +9,10 @@ public class Human extends Humanoid implements Attack, Move {
         String s = String.format("Player%n" +
                     "HP: %d", this.getHp());
         return s;
+    }
+
+    public void run(){
+        this.setXPos((int)(Math.random() * 10));
+        this.setYPos((int)(Math.random() * 10));
     }
 }

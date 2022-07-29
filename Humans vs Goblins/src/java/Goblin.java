@@ -1,4 +1,4 @@
-public class Goblin extends Humanoid implements Attack, Move{
+public class Goblin extends Humanoid implements Move{
     private int hp = 10;
     private int damage = 1;
     public Goblin(){
