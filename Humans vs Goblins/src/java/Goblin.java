@@ -1,6 +1,6 @@
 public class Goblin extends Humanoid implements Move{
-    private int hp = 10;
-    private int damage = 1;
+    protected int hp = 10;
+    protected int damage = 1;
     public Goblin(){
         this.setHp(hp);
         this.setDamage(damage);

@@ -1,7 +1,7 @@
 public interface Attack {
     default String attack(Humanoid attacker, Humanoid defender){
 
-        int turnDamage = (int)(Math.random() *5) + attacker.getDamage();
+        int turnDamage = (int)(Math.random() * 5) + attacker.getDamage();
         defender.setHp(defender.getHp() - turnDamage);
 
         String result = String.format("%s attacks %s for %d damage.%n",
