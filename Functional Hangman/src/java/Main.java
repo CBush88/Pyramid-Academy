@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,14 +25,14 @@ public class Main {
                 if (hangman.winCheck() == 1) {
                     score++;
                     writeOutput(fileOut, playerName, score);
-                    System.out.println(getHighScore(fileOut, playerName, score));
+                    System.out.println(getHighScore(fileOut, score));
                 }
                 if (hangman.winCheck() != 0) {
                     hangman = new Hangman(words);
                 }
                 System.out.println("HANGMAN");
                 try (Scanner fileReader = new Scanner(fileIn)) {
-                    printHangman(hangman.getGuesses(), fileReader);
+                    System.out.print(hangmanGraphic(hangman.getGuesses(), fileReader));
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
@@ -40,7 +41,7 @@ public class Main {
                 System.out.println("Enter a guess!");
                 try {
                     if (hangman.winCheck() == 0) {
-                        getGuess(hangman.getLettersGuessed(), input);
+                        hangman.guess(input);
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -53,7 +54,7 @@ public class Main {
             }
             if (hangman.winCheck() != 0) {
                 try (Scanner fileReader = new Scanner(fileIn)) {
-                    printHangman(hangman.getGuesses(), fileReader);
+                    hangmanGraphic(hangman.getGuesses(), fileReader);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
@@ -72,29 +73,19 @@ public class Main {
             score++;
         }
         writeOutput(fileOut, playerName, score);
-        System.out.println(getHighScore(fileOut, playerName, score));
+        System.out.println(getHighScore(fileOut, score));
     }
 
-    public static void printHangman(int guesses, Scanner fileReader) {
+    public static String hangmanGraphic(int guesses, Scanner fileReader) {
         List<String> hangman = Arrays.asList(fileReader.nextLine().split(";")[guesses].split(","));
-        hangman.forEach(System.out::println);
+        return hangman.stream().reduce("", (s, t) -> s + (t + "\n"));
     }
 
-    public static void getGuess(List<String> lettersGuessed, Scanner input) throws Exception {
-        String letter = input.next().toLowerCase().substring(0, 1);
-        if (lettersGuessed.contains(letter)) {
-            throw new Exception("You guessed that letter already!");
-        }
-        if (Character.isAlphabetic(letter.charAt(0))) {
-            lettersGuessed.add(letter);
-        } else {
-            throw new Exception("Enter a letter");
-        }
-    }
     public static void writeOutput(File fileOut, String playerName, int score){
         try{
+            Path path = Path.of(fileOut.getPath());
             //no loops
-            List<String> lines = Files.readAllLines(Paths.get(fileOut.getPath()));
+            List<String> lines = Files.readAllLines(path);
             //add all lines not associated with player name for output
             String output = lines.stream().filter(s -> !s.contains(playerName)).map(s -> s + "\n").collect(Collectors.joining());
             //if player is in file
@@ -116,14 +107,19 @@ public class Main {
             System.out.println(e.getMessage());
         }
     }
-    public static String getHighScore(File fileOut, String playerName, int score){
+    public static String getHighScore(File fileOut, int score){
         try{
-            List<String> lines = Files.readAllLines(Paths.get(fileOut.getPath()));
+            Path path = Path.of(fileOut.getPath());
+            List<String> lines = Files.readAllLines(path);
+            //get line with the highest score
             String highScore = String.valueOf(lines.stream().max(Comparator.comparingInt(s -> Integer.parseInt(s.substring(s.indexOf(':') + 2)))));
+            //get the score from the line with the highest score
             int scoreInt = Integer.parseInt(highScore.substring(highScore.indexOf(':') + 2, highScore.indexOf(']')));
+            //get the name from the line with the highest score
             String scoreName = highScore.substring(highScore.indexOf('[') + 1, highScore.indexOf(':'));
 
-            if(scoreName.equals(playerName) && scoreInt <= score){
+            //if the player currently is the highest scoring, custom message, otherwise generic message
+            if(scoreInt <= score){
                 return String.format("You currently have the high score with %d consecutive wins!", score);
             }else{
                 return String.format("%s has the high score of: %d consecutive wins.", scoreName, scoreInt);

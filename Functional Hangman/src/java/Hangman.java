@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Hangman {
     private final List<String> word;
@@ -53,5 +50,16 @@ public class Hangman {
 
     public String getSecret() {
         return secret;
+    }
+    public void guess(Scanner input) throws Exception {
+        String letter = input.next().toLowerCase().substring(0, 1);
+        if (lettersGuessed.contains(letter)) {
+            throw new Exception("You guessed that letter already!");
+        }
+        if (Character.isAlphabetic(letter.charAt(0))) {
+            lettersGuessed.add(letter);
+        } else {
+            throw new Exception("Guess a letter");
+        }
     }
 }
