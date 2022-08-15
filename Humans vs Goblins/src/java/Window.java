@@ -17,7 +17,7 @@ public class Window {
     private JLabel mapLine8;
     private JLabel mapLine9;
     private JLabel mapLine10;
-    private JLabel controls;
+    private JLabel outputLab;
     private JLabel vsLab;
     private JLabel playerHpLab;
     private JLabel enemyHpLab;
@@ -42,8 +42,8 @@ public class Window {
             }
         });
     }
-    public JLabel getControls(){
-        return controls;
+    public JLabel getOutputLab(){
+        return outputLab;
     }
     public JLabel getPlayerHpLab(){
         return playerHpLab;

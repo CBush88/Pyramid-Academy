@@ -8,7 +8,7 @@ class HumanTest {
     void testToString() {
         Human human = new Human();
         String stringHuman = human.toString();
-        assertTrue(String.format("Player%nHP: %d", human.getHp()).equals(stringHuman), "String incorrect");
+        assertTrue(String.format("Player HP: %d", human.getHp()).equals(stringHuman), "String incorrect");
     }
 
     @Test

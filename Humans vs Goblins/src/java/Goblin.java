@@ -6,7 +6,7 @@ public class Goblin extends Humanoid implements Move{
         this.setDamage(damage);
     }
     public String toString(){
-        String s = String.format("Enemy Goblin%n"+
+        String s = String.format("Enemy Goblin "+
                     "HP: %d", this.getHp());
 
         return s;

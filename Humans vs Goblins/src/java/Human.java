@@ -6,7 +6,7 @@ public class Human extends Humanoid implements Move {
         this.setDamage(damage);
     }
     public String toString(){
-        String s = String.format("Player%n" +
+        String s = String.format("Player " +
                     "HP: %d", this.getHp());
         return s;
     }

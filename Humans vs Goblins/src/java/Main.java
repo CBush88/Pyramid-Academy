@@ -54,22 +54,20 @@ public class Main {
                             moveSem.release();
                         }
                     }
-                    else if(e.getKeyChar() == 'e' || e.getKeyChar() == 'r'){
+                    else if((e.getKeyChar() == 'e' || e.getKeyChar() == 'r') && combatants.size() > 0){
                         try {
                             if(e.getKeyChar() == 'e') {
-                                if (combatants.size() > 0) {
-                                    human.attack(combatants.get(0));
-                                }
+                                    writeOutput(window, human.attack(combatants.get(0)));
+                                    battleSem.release();
                             }else if(e.getKeyChar() == 'r') {
                                 human.run();
-                                window.getEnemyHpLab().setText("You ran away randomly until you ran out of breath!");
-                                Thread.sleep(1000);
+                                window.getOutputLab().setText("You ran away randomly until you were out of breath!");
+                                combatants.clear();
+                                battleSem.release();
                             }
                         }catch(Exception ex){
                             exceptionDialog(ex.getMessage());
                         }
-                        battleSem.release();
-
                     }
                 }
             });
@@ -77,6 +75,7 @@ public class Main {
 
 
         do{
+            battleSem.drainPermits();
             window.getPlayerHpLab().setText(human.toString());
             window.getEnemyHpLab().setVisible(false);
             window.getVsLab().setVisible(false);
@@ -86,10 +85,8 @@ public class Main {
                 window.getMapLines()[i].setText(map.toString().split("\n")[i]);
                 window.getMapLines()[i].repaint();
             }
-            System.out.println(map);
-            window.getControls().setText(moveControls);
-            window.getControls().repaint();
-            System.out.println(moveControls);
+            window.getOutputLab().setText(moveControls);
+            window.getOutputLab().repaint();
 
             inputSem.release();
             try{
@@ -103,28 +100,36 @@ public class Main {
                 window.getPlayerHpLab().setText(human.toString());
                 window.getVsLab().setText("vs");
                 window.getEnemyHpLab().setText(goblin.toString());
-                System.out.println(combatControls);
-                window.getControls().setText(combatControls);
+                window.getOutputLab().setText(combatControls);
                 window.getEnemyHpLab().setVisible(true);
                 window.getVsLab().setVisible(true);
 
                 try{
                     battleSem.acquire();
+                    Thread.sleep(1500);
+                    battleSem.drainPermits();
                 }catch(Exception ex){
                     exceptionDialog(ex.getMessage());
                 }
+
                 if(goblin.getHp() > 0 && combatCheck(humanoids, combatants)){
-                    System.out.println(goblin.attack(human));
+                    writeOutput(window, goblin.attack(human));
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
                 removeDead(humanoids, combatants);
                 if(humanoids.size() == 1) {
                     if (humanoids.get(0) instanceof Human) {
-                        window.getControls().setText("You win!");
+                        window.getOutputLab().setText("You win!");
                     }
                 }
                 if(human.getHp() <= 0){
-                    window.getControls().setText("You died!");
+                    window.getOutputLab().setText("You died!");
+                    combatants.clear();
                     }
             }
         }while(human.getHp() > 0 && humanoids.size() > 1);
@@ -165,5 +170,7 @@ public class Main {
         humanoids.removeIf(h -> h.getHp() <= 0);
         combatants.removeIf(h -> h.getHp() <= 0);
     }
-
+    public static void writeOutput(Window window, String output){
+        window.getOutputLab().setText(output);
+    }
 }
