@@ -32,7 +32,7 @@ public class Land {
         String mapString = "";
         for(String[] x : map){
             for(String y : x) {
-                mapString += (y + " ");
+                mapString += (y + "  ");
             }
             mapString += "\n";
         }

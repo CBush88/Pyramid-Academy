@@ -1,92 +1,142 @@
+import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.concurrent.Semaphore;
+
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+
+    public static void main(String[] args) {
+        Window window = new Window();
         Human human = new Human();
+        Goblin goblin;
+        Semaphore moveSem = new Semaphore(0);
+        Semaphore battleSem = new Semaphore(0);
+        Semaphore inputSem = new Semaphore(0);
+
         ArrayList<Humanoid> humanoids = new ArrayList<>();
         ArrayList<Goblin> combatants = new ArrayList<>();
         humanoids.add(human);
 
-        Character[] moveKeys = {'w','a','s','d'};
-        ArrayList<Character> moveInputs = new ArrayList<>(Arrays.asList(moveKeys));
-        Character[] battleKeys = {'e', 'r'};
-        ArrayList<Character> battleInputs = new ArrayList<>(Arrays.asList(battleKeys));
+        String moveControls = "Move with WASD";
+        String combatControls = "E to attack or R to run";
+
+
 
         for(int i = 0; i <= (int)((Math.random() * 2) +1); i++){
-            Goblin goblin = new Goblin();
+            goblin = new Goblin();
             humanoids.add(goblin);
         }
-        Scanner input = new Scanner(System.in);
         Land map = new Land(humanoids);
 
-        do{
-            map.update(humanoids);
-            System.out.println(map);
-            System.out.println("Move with WASD");
-            while(true) {
-                try {
-                    human.move(getInput(input, moveInputs));
-                    break;
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Window");
+            frame.setContentPane(window.window);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setSize(400, 275);
+            frame.setVisible(true);
+            frame.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    super.keyPressed(e);
+                    if((e.getKeyChar() == 'w' || e.getKeyChar() == 'a' || e.getKeyChar() == 's'
+                    || e.getKeyChar() == 'd')){
+                        if(inputSem.availablePermits() > 0) {
+                            try {
+                                inputSem.acquire();
+                            } catch (InterruptedException ex) {
+                                exceptionDialog(ex.getMessage());
+                            }
+                            human.move(e.getKeyChar());
+                            frame.repaint();
+                            moveSem.release();
+                        }
+                    }
+                    else if(e.getKeyChar() == 'e' || e.getKeyChar() == 'r'){
+                        try {
+                            if(e.getKeyChar() == 'e') {
+                                if (combatants.size() > 0) {
+                                    human.attack(combatants.get(0));
+                                }
+                            }else if(e.getKeyChar() == 'r') {
+                                human.run();
+                                window.getEnemyHpLab().setText("You ran away randomly until you ran out of breath!");
+                                Thread.sleep(1000);
+                            }
+                        }catch(Exception ex){
+                            exceptionDialog(ex.getMessage());
+                        }
+                        battleSem.release();
+
+                    }
                 }
+            });
+        });
+
+
+        do{
+            window.getPlayerHpLab().setText(human.toString());
+            window.getEnemyHpLab().setVisible(false);
+            window.getVsLab().setVisible(false);
+
+            map.update(humanoids);
+            for(int i = 0; i < window.getMapLines().length; i++){
+                window.getMapLines()[i].setText(map.toString().split("\n")[i]);
+                window.getMapLines()[i].repaint();
+            }
+            System.out.println(map);
+            window.getControls().setText(moveControls);
+            window.getControls().repaint();
+            System.out.println(moveControls);
+
+            inputSem.release();
+            try{
+                moveSem.acquire();
+            }catch(Exception ex){
+                exceptionDialog(ex.getMessage());
             }
 
             while(combatCheck(humanoids, combatants)) {
-                Goblin goblin = combatants.get(0);
-                System.out.println(human);
-                System.out.println("vs");
-                System.out.println(goblin);
-                System.out.println("E to attack or R to run");
-                while(true) {
-                    try {
-                        char keyPress = getInput(input, battleInputs);
-                        if (keyPress == 'e') {
-                            System.out.println(human.attack(goblin));
-                            break;
-                        }else if(keyPress == 'r'){
-                            human.run();
-                            System.out.println("You ran away randomly until you ran out of breath!");
-                            combatants.removeAll(combatants);
-                            break;
-                        }
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
+                goblin = combatants.get(0);
+                window.getPlayerHpLab().setText(human.toString());
+                window.getVsLab().setText("vs");
+                window.getEnemyHpLab().setText(goblin.toString());
+                System.out.println(combatControls);
+                window.getControls().setText(combatControls);
+                window.getEnemyHpLab().setVisible(true);
+                window.getVsLab().setVisible(true);
+
+                try{
+                    battleSem.acquire();
+                }catch(Exception ex){
+                    exceptionDialog(ex.getMessage());
                 }
-                Thread.sleep(1000);
                 if(goblin.getHp() > 0 && combatCheck(humanoids, combatants)){
                     System.out.println(goblin.attack(human));
                 }
-                Thread.sleep(1000);
 
-                try {
-                    removeDead(humanoids, combatants);
-                }catch(Exception e){
-                    System.out.println(e.getMessage());
-                }
+                removeDead(humanoids, combatants);
                 if(humanoids.size() == 1) {
                     if (humanoids.get(0) instanceof Human) {
-                        System.out.println("You win!");
+                        window.getControls().setText("You win!");
                     }
                 }
                 if(human.getHp() <= 0){
-                    System.out.println("You lose!");
-                    System.out.println("Better luck next time");
+                    window.getControls().setText("You died!");
                     }
             }
         }while(human.getHp() > 0 && humanoids.size() > 1);
     }
-    public static char getInput(Scanner input, ArrayList<Character> allowableInputs) throws Exception {
-        char keyPress = input.next().toLowerCase().charAt(0);
-        if(allowableInputs.contains(keyPress)){
-            return keyPress;
-        }else{
-            throw new Exception("Invalid input, try again");
-        }
-
+    public static void exceptionDialog(String msg){
+        JDialog errWindow = new JDialog();
+        errWindow.setTitle("Exception");
+        JLabel errLabel = new JLabel(msg);
+        errWindow.add(errLabel);
+        errLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        errWindow.pack();
+        errWindow.setVisible(true);
     }
     public static boolean combatCheck(ArrayList<Humanoid> humanoids, ArrayList<Goblin> combatants){
 

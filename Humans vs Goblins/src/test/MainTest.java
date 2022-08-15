@@ -14,22 +14,6 @@ class MainTest {
     void setUp() {
     }
 
-
-    @Test
-    void getInput() throws Exception {
-        Scanner input = new Scanner("a");
-        Scanner badInput = new Scanner("b");
-        ArrayList<Character> keys = new ArrayList<>();
-        keys.add('a');
-        char inputChar;
-        inputChar = Main.getInput(input, keys);
-        assertSame('a', inputChar, "Input test failed");
-
-        Exception e;
-        e = assertThrows(Exception.class, () -> Main.getInput(badInput, keys), "Should throw exception");
-        assertSame("Invalid input, try again", e.getMessage(), "Wrong exception");
-    }
-
     @Test
     void combatCheck() {
         Human human = new Human();
