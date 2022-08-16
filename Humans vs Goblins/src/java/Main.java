@@ -35,7 +35,7 @@ public class Main {
             frame.setContentPane(window.window);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.pack();
-            frame.setSize(400, 275);
+            frame.setSize(450, 275);
             frame.setVisible(true);
             frame.addKeyListener(new KeyAdapter() {
                 @Override
@@ -43,7 +43,7 @@ public class Main {
                     super.keyPressed(e);
                     if((e.getKeyChar() == 'w' || e.getKeyChar() == 'a' || e.getKeyChar() == 's'
                     || e.getKeyChar() == 'd')){
-                        if(inputSem.availablePermits() > 0) {
+                        if(!combatCheck(humanoids, combatants)) {
                             try {
                                 inputSem.acquire();
                             } catch (InterruptedException ex) {
@@ -54,19 +54,23 @@ public class Main {
                             moveSem.release();
                         }
                     }
-                    else if((e.getKeyChar() == 'e' || e.getKeyChar() == 'r') && combatants.size() > 0){
-                        try {
-                            if(e.getKeyChar() == 'e') {
+                    else if((e.getKeyChar() == 'e' || e.getKeyChar() == 'r') && combatants.size() > 0) {
+                        if (inputSem.availablePermits() > 0) {
+                            try {
+                                if (e.getKeyChar() == 'e') {
+                                    inputSem.acquire();
                                     writeOutput(window, human.attack(combatants.get(0)));
                                     battleSem.release();
-                            }else if(e.getKeyChar() == 'r') {
-                                human.run();
-                                window.getOutputLab().setText("You ran away randomly until you were out of breath!");
-                                combatants.clear();
-                                battleSem.release();
+                                } else if (e.getKeyChar() == 'r') {
+                                    inputSem.acquire();
+                                    human.run();
+                                    window.getOutputLab().setText("You ran away randomly until you were out of breath!");
+                                    combatants.clear();
+                                    battleSem.release();
+                                }
+                            } catch (Exception ex) {
+                                exceptionDialog(ex.getMessage());
                             }
-                        }catch(Exception ex){
-                            exceptionDialog(ex.getMessage());
                         }
                     }
                 }
@@ -104,10 +108,10 @@ public class Main {
                 window.getEnemyHpLab().setVisible(true);
                 window.getVsLab().setVisible(true);
 
+                inputSem.release();
                 try{
                     battleSem.acquire();
                     Thread.sleep(1500);
-                    battleSem.drainPermits();
                 }catch(Exception ex){
                     exceptionDialog(ex.getMessage());
                 }
@@ -116,8 +120,8 @@ public class Main {
                     writeOutput(window, goblin.attack(human));
                     try {
                         Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                    } catch (InterruptedException ex) {
+                        exceptionDialog(ex.getMessage());
                     }
                 }
 
@@ -141,6 +145,7 @@ public class Main {
         errWindow.add(errLabel);
         errLabel.setHorizontalAlignment(SwingConstants.CENTER);
         errWindow.pack();
+        errWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         errWindow.setVisible(true);
     }
     public static boolean combatCheck(ArrayList<Humanoid> humanoids, ArrayList<Goblin> combatants){
