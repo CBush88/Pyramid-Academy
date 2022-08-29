@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+"> <!-- bean definitions here -->
+
+    <bean id="Student" class="org.genspark.Student">
+        <constructor-arg index="0" value="00001"/>
+        <constructor-arg index="1" value="John Doe"/>
+        <constructor-arg index="2" ref="PhoneList"/>
+        <constructor-arg index="3" ref="Address"/>
+    </bean>
+
+    <bean id="Phone" class="org.genspark.Phone">
+        <property name="mob" value="555-123-4567"/>
+    </bean>
+
+    <bean id="Phone2" class="org.genspark.Phone">
+        <property name="mob" value="555-234-5678"/>
+    </bean>
+
+    <util:list id="PhoneList" value-type="org.genspark.Phone">
+        <ref bean="Phone" />
+        <ref bean="Phone2" />
+    </util:list>
+
+    <bean id="Address" class="org.genspark.Address">
+        <constructor-arg index="0" value="Atlanta"/>
+        <constructor-arg index="1" value="Georgia"/>
+        <constructor-arg index="2" value="US"/>
+        <constructor-arg index="3" value="30303"/>
+    </bean>
+
+</beans>
