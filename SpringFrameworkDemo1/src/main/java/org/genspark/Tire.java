@@ -24,6 +24,7 @@ public class Tire {
     }
 
     public void setBrand(String brand) {
+        System.out.println("Setting tire brand");
         this.brand = brand;
     }
 

@@ -6,7 +6,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> <!-- bean definitions here -->
 
 <!--    Constructor Injection-->
-    <bean id="Vehicle" class="org.genspark.Car">
+    <bean id="Vehicle" class="org.genspark.Car" init-method="init" destroy-method="destroy">
         <constructor-arg index="0" ref="Tire"/>
     </bean>
 
