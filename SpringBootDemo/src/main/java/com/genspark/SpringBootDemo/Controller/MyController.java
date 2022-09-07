@@ -40,7 +40,7 @@ public class MyController {
         return this.courseService.addCourse(course);
     }
 
-    @PutMapping("/courses/{courseId}")
+    @PutMapping("/courses")
     public Course updateCourse(@RequestBody Course course){
         return this.courseService.updateCourse(course);
     }

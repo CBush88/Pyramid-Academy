@@ -1,8 +1,14 @@
 package com.genspark.SpringBootDemo.Entity;
 
 
+import javax.persistence.*;
 
+@Entity
+@Table(name="tbl_courses") //custom name for the table
 public class Course {
+    @Id
+    @Column(name = "c_id") // custom name for column
+    @GeneratedValue(strategy = GenerationType.AUTO) //auto generate the ID
     private int courseId;
     private String title;
     private String instructor;
