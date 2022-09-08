@@ -1,6 +1,13 @@
 package com.genspark.SpringBootEmployee.Entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="tbl_employees")
 public class Employee {
+    @Id
+    @Column(name="e_id")
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int employeeId;
     private String employeeName;
     private String employeeEmail;

@@ -2,7 +2,6 @@ package com.genspark.SpringBootEmployee.Controller;
 
 import com.genspark.SpringBootEmployee.Entity.Employee;
 import com.genspark.SpringBootEmployee.Service.EmployeeService;
-import com.genspark.SpringBootEmployee.Service.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,7 @@ public class MyController {
         return this.employeeService.getEmployees();
     }
 
-    @GetMapping("/employee/{employeeId}")
+    @GetMapping("/employees/{employeeId}")
     public Employee getEmployeeById(@PathVariable String employeeId){
         return this.employeeService.getEmployeeById(Integer.parseInt(employeeId));
     }
@@ -34,7 +33,7 @@ public class MyController {
         return this.employeeService.updateEmployee(employee);
     }
 
-    @DeleteMapping("/employee/{employeeId}")
+    @DeleteMapping("/employees/{employeeId}")
     public String deleteEmployee(@PathVariable String employeeId){
         return this.employeeService.deleteEmployee(Integer.parseInt(employeeId));
     }
