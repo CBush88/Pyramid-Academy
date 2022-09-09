@@ -1,6 +1,7 @@
 package com.genspark.SpringBootEmployee.Controller;
 
 import com.genspark.SpringBootEmployee.Entity.Employee;
+import com.genspark.SpringBootEmployee.Service.EmailService;
 import com.genspark.SpringBootEmployee.Service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,8 @@ public class MyController {
 
     @Autowired
     EmployeeService employeeService;
+    @Autowired
+    EmailService emailService;
 
     @GetMapping("/employees")
     public List<Employee> getAllEmployees(){
@@ -25,7 +28,12 @@ public class MyController {
 
     @PostMapping("/employees")
     public Employee addEmployee(@RequestBody Employee employee){
-        return this.employeeService.addEmployee(employee);
+        Employee result = this.employeeService.addEmployee(employee);
+        //commented out for push
+//        this.emailService.sendEmail(result.getEmployeeEmail(),
+//                "Welcome",
+//                String.format("Welcome %s, thank you for joining us!", result.getEmployeeName()));
+        return result;
     }
 
     @PutMapping("/employees")
