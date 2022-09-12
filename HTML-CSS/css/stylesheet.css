@@ -1,0 +1,58 @@
+#home {
+    background-image: url(/img/binary-background.jpg);
+    background-size: 100%;
+    aspect-ratio: auto;
+    position:absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    color:white;
+}
+body{
+    background-color: lightgray;
+}
+#content {
+    width: 80%;
+    margin:auto;
+    padding: 10px;
+    background-color: white;
+}
+header {
+    position: sticky;
+    top: 0;
+    text-align: center;
+    background-color:burlywood;
+}
+.home-content{
+    background-color: rgba(0,0,0,.5);
+}
+.profile-pic {
+    width: 80px;
+}
+h2 {
+    text-align: center;
+}
+.left {
+    float:left;
+    width:35%;
+}
+.right {
+    float:left;
+    width:65%;
+}
+.grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 15px;
+    border: 3px;
+    border-style: solid;
+    align-items: center;
+}
+.grid p {
+    vertical-align: top;
+    margin-bottom: auto;
+}
+.grid img {
+    height: 250px;
+    margin: auto;
+}
