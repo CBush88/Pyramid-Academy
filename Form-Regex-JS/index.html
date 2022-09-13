@@ -1,0 +1,129 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Registration</title>
+    <script>
+        function validateForm(){
+            if(validateFirstName() && validateLastName() && validateEmail() && validatePassword()){
+                return true;
+            }else{
+                alert("Please fill out all the required fields!");
+                return false;
+            }
+        }
+        function validateFirstName(){
+            let pattern = /[^a-z]+/i;
+            let firstName = document.getElementById("fname").value;
+            let validation = document.getElementById("fnameval");
+            if(pattern.test(firstName)){
+                validation.style.display = "inline";
+                validation.innerText = "You must enter a valid first name!";
+            }else if(firstName == ""){
+                validation.style.display = "inline";
+                validation.innerText = "* required";
+            }else{
+                validation.style.display = "none";
+                return true;
+            }
+            return false;
+        }
+        function validateLastName(){
+            let pattern = /[^a-z]+/i;
+            let lastName = document.getElementById("lname").value;
+            let validation = document.getElementById("lnameval");
+            if(pattern.test(lastName)){
+                validation.style.display = "inline";
+                validation.innerText = "You must enter a valid last name!";
+            }else if(lastName = ""){
+                validation.style.display = "inline";
+                validation.innerText = "* required";
+            }else{
+                validation.style.display = "none";
+                return true;
+            }
+            return false;
+        }
+        function validateEmail(){
+            let pattern = /^[a-zA-Z0-9.! #$%&'+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+\.(?:.[a-zA-Z0-9-]+)$/;
+            let email = document.getElementById("email").value;
+            let validation = document.getElementById("emailval");
+            if(!pattern.test(email)){
+                validation.style.display = "inline";
+                validation.innerText = "You must enter a valid email address!";
+            }else if(email == ""){
+                validation.style.display = "inline";
+                validation.innerText = "* required";
+            }else{
+                validation.style.display = "none";
+                return true;
+            }
+            return false;
+        }
+        function validatePassword(){
+            let password = document.getElementById("password").value;
+            let password2 = document.getElementById("rpassword").value;
+            let validation = document.getElementById("passwordval");
+            if(password != "" && password2 != "" && password != password2){
+                validation.style.display = "inline";
+                validation.innerText = "Passwords must match!";
+            }else if(!(/[a-z]/.test(password) && /[A-Z]/.test(password) 
+                    && /[0-9]/.test(password))){
+                validation.innerText = "Password must contain uppercase letters, lowercase letters, and numbers!";
+            }else{
+                validation.style.display = "none";
+                return true;
+            }
+            return false;
+        }
+        
+    </script>
+</head>
+<body>
+    <h1>Register your account</h1>
+    <form name = myForm onsubmit="return validateForm()" method="post">
+        <label for="fname">First Name</label>
+        <br>
+        <input type="text" name="fname" id="fname">
+        <label id="fnameval" style="color:red; display:none;" for="fname"></label>
+        <script>
+            document.getElementById("fname").onblur = function() {validateFirstName()};
+        </script>
+        <br>
+        <label for="lname">Last Name</label>
+        <br>
+        <input type="text" name="lname" id="lname">
+        <label id="lnameval" style="color:red; display:none;" for="fname"></label>
+        <script>
+            document.getElementById("lname").onblur = function() {validateLastName()};
+        </script>
+        <br>
+        <label for="email">Email</label>
+        <br>
+        <input type="email" name="email" id="email">
+        <label id="emailval" style="color:red; display:none;" for="fname"></label>
+        <script>
+            document.getElementById("email").onblur = function() {validateEmail()};
+        </script>
+        <br>
+        <label for="password">Password</label>
+        <br>
+        <input type="password" name="password" id="password">
+        <label id="passwordval" style="color:red; display:none;" for="fname"></label>
+        <script>
+            document.getElementById("password").onblur = function() {validatePassword()};
+        </script>
+        <br>
+        <label for="rpassword">Repeat Password</label>
+        <br>
+        <input type="password" name="rpassword" id="rpassword">
+        <script>
+            document.getElementById("rpassword").onblur = function(){validatePassword()};
+        </script>
+        <br>
+        <input type="submit" value="Submit">
+
+    </form>    
+</body>
+</html>
